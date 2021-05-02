@@ -1,0 +1,7 @@
+﻿  first_app.cpp
+C:\Users\aebar\Desktop\ANDY_engine\ANDY_engine\ANDY_engine\first_app.cpp(35,31): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aebar\Desktop\ANDY_engine\ANDY_engine\ANDY_engine\first_app.cpp(116,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\aebar\Desktop\ANDY_engine\ANDY_engine\ANDY_engine\first_app.cpp(123,27): warning C4018: '<': signed/unsigned mismatch
+  main.cpp
+  Generating Code...
+  ANDY_engine.vcxproj -> C:\Users\aebar\Desktop\ANDY_engine\ANDY_engine\x64\Debug\ANDY_engine.exe
