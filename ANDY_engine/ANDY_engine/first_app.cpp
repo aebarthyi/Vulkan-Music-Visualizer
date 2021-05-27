@@ -1,12 +1,5 @@
 #include "first_app.hpp"
 #include "simple_render_system.hpp"
-#include <imgui.h>
-#include <imgui_internal.h>
-#include <imstb_rectpack.h>
-#include <imstb_textedit.h>
-#include <imstb_truetype.h>
-#include <backends/imgui_impl_vulkan.h>
-#include <backends/imgui_impl_glfw.h>
 // libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
