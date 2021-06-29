@@ -10,6 +10,9 @@ namespace ae {
 		aeWindow(int w, int h, std::string name);
 		~aeWindow();
 
+		aeWindow(const aeWindow&) = delete;
+		aeWindow& operator=(const aeWindow&) = delete;
+
 		bool shouldClose() { return glfwWindowShouldClose(window); }
 
 		bool wasWindowResized() { return frameBufferResized; }

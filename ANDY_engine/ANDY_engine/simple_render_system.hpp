@@ -5,6 +5,7 @@
 #include "ae_game_object.hpp"
 #include "ae_device.hpp"
 #include "ae_renderer.hpp"
+#include "ae_camera.hpp"
 #include <memory>
 #include <vector>
 #include <iostream>
@@ -19,7 +20,7 @@ namespace ae {
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects);
+		void renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects, const aeCamera &camera);
 
 	private:
 		void createPipelineLayout();

@@ -54,7 +54,7 @@ namespace ae {
 			);
 	}
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects) {
+	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects, const aeCamera& camera) {
 		for (auto& obj : gameObjects) {
 			obj.transform.rotation.y = glm::mod<float>(obj.transform.rotation.y + 0.01f, 2.f * glm::pi<float>());
 			obj.transform.rotation.x = glm::mod<float>(obj.transform.rotation.x + 0.01f, 2.f * glm::pi<float>());
@@ -65,7 +65,7 @@ namespace ae {
 		for (auto& obj : gameObjects) {
 			simplePushConstantData push{};
 			push.color = obj.color;
-			push.transform = obj.transform.mat4();
+			push.transform = camera.getProjection() * obj.transform.mat4();
 
 			vkCmdPushConstants(commandbuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(simplePushConstantData), &push);
 			obj.model->bind(commandbuffer);

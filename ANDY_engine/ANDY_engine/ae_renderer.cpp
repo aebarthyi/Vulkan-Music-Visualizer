@@ -98,8 +98,8 @@ namespace ae {
 			recreateSwapChain();
 		}
 
-		if (result != VK_SUCCESS) {
-			throw std::runtime_error("failed to present swap chain image");
+		else if (result != VK_SUCCESS) {
+			throw std::runtime_error("failed to present swap chain image\n");
 		}
 		isFrameStarted = false;
 		currentFrameIndex = (currentFrameIndex + 1) % aeSwapChain::MAX_FRAMES_IN_FLIGHT;

@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 #include "simple_render_system.hpp"
+#include "ae_camera.hpp"
 // libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -20,13 +21,20 @@ namespace ae {
     void FirstApp::run() {
 
         SimpleRenderSystem simpleRenderSystem{ ae_Device, ae_Renderer.getSwapChainRenderPass() };
+        aeCamera camera{};
+        camera.setOrthographicProjection(-1, 1, -1, 1, -1, 1);
+
 
         while (!ae_Window.shouldClose()) {
             glfwPollEvents();
 
+            float aspect = ae_Renderer.getAspectRatio();
+            //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
+            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+
             if (auto commandBuffer = ae_Renderer.beginFrame()) {
                 ae_Renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects);
+                simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
                 ae_Renderer.endSwapChainRenderPass(commandBuffer);
                 ae_Renderer.endFrame();
             }
@@ -97,7 +105,7 @@ namespace ae {
         std::shared_ptr<aeModel> ae_Model = createCubeModel(ae_Device, { .0f, .0f, .0f });
         auto cube = aeGameObject::createGameObject();
         cube.model = ae_Model;
-        cube.transform.translation = { .0f, .0f, .5f };
+        cube.transform.translation = { .0f, .0f, 3.5f };
         cube.transform.scale = { .5f, .5f, .5f };
         gameObjects.push_back(std::move(cube));
     }
