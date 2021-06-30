@@ -62,10 +62,13 @@ namespace ae {
 
 		ae_Pipeline->bind(commandbuffer);
 
+		auto projectionView = camera.getProjection() * camera.getView();
+
+
 		for (auto& obj : gameObjects) {
 			simplePushConstantData push{};
 			push.color = obj.color;
-			push.transform = camera.getProjection() * obj.transform.mat4();
+			push.transform = projectionView * obj.transform.mat4();
 
 			vkCmdPushConstants(commandbuffer, pipelineLayout, VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(simplePushConstantData), &push);
 			obj.model->bind(commandbuffer);

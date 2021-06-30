@@ -1,6 +1,7 @@
 #include "first_app.hpp"
 #include "simple_render_system.hpp"
 #include "ae_camera.hpp"
+
 // libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -22,8 +23,8 @@ namespace ae {
 
         SimpleRenderSystem simpleRenderSystem{ ae_Device, ae_Renderer.getSwapChainRenderPass() };
         aeCamera camera{};
-        camera.setOrthographicProjection(-1, 1, -1, 1, -1, 1);
-
+        //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
+        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(.0f, .0f, 3.5f));
 
         while (!ae_Window.shouldClose()) {
             glfwPollEvents();
