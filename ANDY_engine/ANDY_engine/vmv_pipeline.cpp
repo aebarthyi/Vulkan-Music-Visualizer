@@ -1,23 +1,23 @@
-#include "ae_pipeline.hpp"
-#include "ae_model.hpp"
+#include "vmv_pipeline.hpp"
+#include "vmv_model.hpp"
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
 
-namespace ae {
-	aePipeline::aePipeline(aeDevice& device, const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) 
-		: ae_Device{ device } {
+namespace vmv {
+	vmvPipeline::vmvPipeline(vmvDevice& device, const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) 
+		: vmv_Device{ device } {
 		createGraphicsPipeline(vertFilePath, fragFilePath, configInfo);
 	}
 
-	aePipeline::~aePipeline() {
-		vkDestroyShaderModule(ae_Device.device(), vertShaderModule, nullptr);
-		vkDestroyShaderModule(ae_Device.device(), fragShaderModule, nullptr);
-		vkDestroyPipeline(ae_Device.device(), graphicsPipeline, nullptr);
+	vmvPipeline::~vmvPipeline() {
+		vkDestroyShaderModule(vmv_Device.device(), vertShaderModule, nullptr);
+		vkDestroyShaderModule(vmv_Device.device(), fragShaderModule, nullptr);
+		vkDestroyPipeline(vmv_Device.device(), graphicsPipeline, nullptr);
 	}
 
-	std::vector<char> aePipeline::readFile(const std::string& filepath) {
+	std::vector<char> vmvPipeline::readFile(const std::string& filepath) {
 		std::ifstream file{ filepath, std::ios::ate | std::ios::binary };
 		if (!file.is_open()) {
 			throw std::runtime_error("Failed to open file" + filepath);
@@ -31,11 +31,11 @@ namespace ae {
 		return buffer;
 	}
 
-	void aePipeline::bind(VkCommandBuffer commandBuffer) {
+	void vmvPipeline::bind(VkCommandBuffer commandBuffer) {
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 	}
 
-	void aePipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) {
+	void vmvPipeline::createGraphicsPipeline(const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo) {
 		assert(configInfo.pipelineLayout != VK_NULL_HANDLE && "Cannot create graphics pipeline:: no pipelineLayout provided in configInfo");
 		assert(configInfo.renderPass != VK_NULL_HANDLE && "Cannot create graphics pipeline:: no renderPass provided in configInfo");
 		auto vertCode = readFile(vertFilePath);
@@ -60,8 +60,8 @@ namespace ae {
 		shaderStages[1].pNext = nullptr;
 		shaderStages[1].pSpecializationInfo = nullptr;
 
-		auto bindingDescriptions = aeModel::Vertex::getBindingDescriptions();
-		auto attributeDescriptions = aeModel::Vertex::getAttributeDescriptions();
+		auto bindingDescriptions = vmvModel::Vertex::getBindingDescriptions();
+		auto attributeDescriptions = vmvModel::Vertex::getAttributeDescriptions();
 		VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 		vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 		vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
@@ -89,24 +89,24 @@ namespace ae {
 		pipelineInfo.basePipelineIndex = -1;
 		pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-		if (vkCreateGraphicsPipelines(ae_Device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
+		if (vkCreateGraphicsPipelines(vmv_Device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create graphics pipeline");
 		}
 
 	}
 
-	void aePipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule) {
+	void vmvPipeline::createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule) {
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size();
 		createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-		if (vkCreateShaderModule(ae_Device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
+		if (vkCreateShaderModule(vmv_Device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS) {
 			throw std::runtime_error("Failed to create shader module");
 		}
 	}
 
-	void aePipeline::defaultPipelineConfigInfo(PipelineConfigInfo &configInfo) {
+	void vmvPipeline::defaultPipelineConfigInfo(PipelineConfigInfo &configInfo) {
 		configInfo.inputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 		configInfo.inputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
 		configInfo.inputAssemblyInfo.primitiveRestartEnable = VK_FALSE;

@@ -21,28 +21,28 @@
     <ClCompile Include="first_app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_window.cpp">
+    <ClCompile Include="vmv_window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_pipeline.cpp">
+    <ClCompile Include="vmv_pipeline.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_device.cpp">
+    <ClCompile Include="vmv_device.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_swap_chain.cpp">
+    <ClCompile Include="vmv_swap_chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_model.cpp">
+    <ClCompile Include="vmv_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_renderer.cpp">
+    <ClCompile Include="vmv_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="simple_render_system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ae_camera.cpp">
+    <ClCompile Include="vmv_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,31 +50,31 @@
     <ClInclude Include="first_app.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_pipeline.hpp">
+    <ClInclude Include="vmv_pipeline.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_window.hpp">
+    <ClInclude Include="vmv_window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_device.hpp">
+    <ClInclude Include="vmv_device.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_swap_chain.hpp">
+    <ClInclude Include="vmv_swap_chain.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_model.hpp">
+    <ClInclude Include="vmv_model.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_game_object.hpp">
+    <ClInclude Include="vmv_game_object.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_renderer.hpp">
+    <ClInclude Include="vmv_renderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="simple_render_system.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ae_camera.hpp">
+    <ClInclude Include="vmv_camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

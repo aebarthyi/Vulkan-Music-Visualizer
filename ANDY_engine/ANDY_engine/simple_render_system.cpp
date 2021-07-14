@@ -8,20 +8,20 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 
-namespace ae {
+namespace vmv {
 
 	struct simplePushConstantData {
 		glm::mat4 transform{ 1.f };
 		alignas(16) glm::vec3 color;
 	};
 
-	SimpleRenderSystem::SimpleRenderSystem(aeDevice& device, VkRenderPass renderPass) : ae_Device{ device }{
+	SimpleRenderSystem::SimpleRenderSystem(vmvDevice& device, VkRenderPass renderPass) : vmv_Device{ device }{
 		createPipelineLayout();
 		createPipeline(renderPass);
 	}
 
 	SimpleRenderSystem::~SimpleRenderSystem() {
-		vkDestroyPipelineLayout(ae_Device.device(), pipelineLayout, nullptr);
+		vkDestroyPipelineLayout(vmv_Device.device(), pipelineLayout, nullptr);
 	}
 
 	void SimpleRenderSystem::createPipelineLayout() {
@@ -38,7 +38,7 @@ namespace ae {
 		pipelineLayoutInfo.pushConstantRangeCount = 1;
 		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
-		if (vkCreatePipelineLayout(ae_Device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
+		if (vkCreatePipelineLayout(vmv_Device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
 			throw std::runtime_error("failed to create pipeline layout");
 		}
 	}
@@ -46,21 +46,21 @@ namespace ae {
 	void SimpleRenderSystem::createPipeline(VkRenderPass renderPass) {
 		assert(pipelineLayout != nullptr && "cannot create pipeline before pipeline layout");
 		PipelineConfigInfo pipelineConfig{};
-		aePipeline::defaultPipelineConfigInfo(pipelineConfig);
+		vmvPipeline::defaultPipelineConfigInfo(pipelineConfig);
 		pipelineConfig.renderPass = renderPass;
 		pipelineConfig.pipelineLayout = pipelineLayout;
-		ae_Pipeline = std::make_unique<aePipeline>(
-			ae_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig
+		vmv_Pipeline = std::make_unique<vmvPipeline>(
+			vmv_Device, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipelineConfig
 			);
 	}
 
-	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects, const aeCamera& camera) {
+	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandbuffer, std::vector<vmvGameObject> &gameObjects, const vmvCamera& camera) {
 		for (auto& obj : gameObjects) {
 			obj.transform.rotation.y = glm::mod<float>(obj.transform.rotation.y + 0.01f, 2.f * glm::pi<float>());
 			obj.transform.rotation.x = glm::mod<float>(obj.transform.rotation.x + 0.01f, 2.f * glm::pi<float>());
 		}
 
-		ae_Pipeline->bind(commandbuffer);
+		vmv_Pipeline->bind(commandbuffer);
 
 		auto projectionView = camera.getProjection() * camera.getView();
 

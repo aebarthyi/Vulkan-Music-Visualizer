@@ -1,6 +1,6 @@
 #include "first_app.hpp"
 #include "simple_render_system.hpp"
-#include "ae_camera.hpp"
+#include "vmv_camera.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -13,7 +13,7 @@
 #include <cassert>
 #include <stdexcept>
 
-namespace ae {
+namespace vmv {
 
     FirstApp::FirstApp() { loadGameObjects(); }
 
@@ -21,31 +21,31 @@ namespace ae {
 
     void FirstApp::run() {
 
-        SimpleRenderSystem simpleRenderSystem{ ae_Device, ae_Renderer.getSwapChainRenderPass() };
-        aeCamera camera{};
+        SimpleRenderSystem simpleRenderSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass() };
+        vmvCamera camera{};
         //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.f, 1.f));
         camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(.0f, .0f, 3.5f));
 
-        while (!ae_Window.shouldClose()) {
+        while (!vmv_Window.shouldClose()) {
             glfwPollEvents();
 
-            float aspect = ae_Renderer.getAspectRatio();
+            float aspect = vmv_Renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
 
-            if (auto commandBuffer = ae_Renderer.beginFrame()) {
-                ae_Renderer.beginSwapChainRenderPass(commandBuffer);
+            if (auto commandBuffer = vmv_Renderer.beginFrame()) {
+                vmv_Renderer.beginSwapChainRenderPass(commandBuffer);
                 simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
-                ae_Renderer.endSwapChainRenderPass(commandBuffer);
-                ae_Renderer.endFrame();
+                vmv_Renderer.endSwapChainRenderPass(commandBuffer);
+                vmv_Renderer.endFrame();
             }
         }
 
-        vkDeviceWaitIdle(ae_Device.device());
+        vkDeviceWaitIdle(vmv_Device.device());
     }
 
-    std::unique_ptr<aeModel> createCubeModel(aeDevice& device, glm::vec3 offset) {
-        std::vector<aeModel::Vertex> vertices{
+    std::unique_ptr<vmvModel> createCubeModel(vmvDevice& device, glm::vec3 offset) {
+        std::vector<vmvModel::Vertex> vertices{
 
             // left face (white)
             {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
@@ -99,16 +99,16 @@ namespace ae {
         for (auto& v : vertices) {
             v.position += offset;
         }
-        return std::make_unique<aeModel>(device, vertices);
+        return std::make_unique<vmvModel>(device, vertices);
     }
 
     void FirstApp::loadGameObjects() {
-        std::shared_ptr<aeModel> ae_Model = createCubeModel(ae_Device, { .0f, .0f, .0f });
-        auto cube = aeGameObject::createGameObject();
-        cube.model = ae_Model;
+        std::shared_ptr<vmvModel> vmv_Model = createCubeModel(vmv_Device, { .0f, .0f, .0f });
+        auto cube = vmvGameObject::createGameObject();
+        cube.model = vmv_Model;
         cube.transform.translation = { .0f, .0f, 3.5f };
         cube.transform.scale = { .5f, .5f, .5f };
         gameObjects.push_back(std::move(cube));
     }
 
-}  // namespace ae
+}  // namespace vmv

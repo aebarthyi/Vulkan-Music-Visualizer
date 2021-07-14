@@ -1,10 +1,10 @@
 #pragma once
 
-#include"ae_device.hpp"
+#include"vmv_device.hpp"
 #include<string>
 #include<vector>
 
-namespace ae {
+namespace vmv {
 	struct PipelineConfigInfo {
 		PipelineConfigInfo(const PipelineConfigInfo&) = delete;
 		PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
@@ -23,14 +23,14 @@ namespace ae {
 		VkPipelineDynamicStateCreateInfo dynamicStateInfo;
 	};
 
-	class aePipeline {
+	class vmvPipeline {
 	public:
-		aePipeline(aeDevice& device, const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo);
+		vmvPipeline(vmvDevice& device, const std::string& vertFilePath, const std::string& fragFilePath, const PipelineConfigInfo& configInfo);
 
-		~aePipeline();
+		~vmvPipeline();
 
-		aePipeline(const aePipeline&) = delete;
-		aePipeline& operator=(const aePipeline&) = delete;
+		vmvPipeline(const vmvPipeline&) = delete;
+		vmvPipeline& operator=(const vmvPipeline&) = delete;
 
 		void bind(VkCommandBuffer commandBuffer);
 
@@ -43,7 +43,7 @@ namespace ae {
 
 		void createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
 
-		aeDevice& ae_Device;
+		vmvDevice& vmv_Device;
 		VkPipeline graphicsPipeline;
 		VkShaderModule vertShaderModule;
 		VkShaderModule fragShaderModule;

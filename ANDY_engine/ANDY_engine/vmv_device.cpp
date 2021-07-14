@@ -1,4 +1,4 @@
-#include "ae_device.hpp"
+#include "vmv_device.hpp"
 
 // std headers
 #include <cstring>
@@ -6,7 +6,7 @@
 #include <set>
 #include <unordered_set>
 
-namespace ae {
+namespace vmv {
 
 // local callback functions
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
@@ -47,7 +47,7 @@ void DestroyDebugUtilsMessengerEXT(
 }
 
 // class member functions
-aeDevice::aeDevice(aeWindow &window) : window{window} {
+vmvDevice::vmvDevice(vmvWindow &window) : window{window} {
   createInstance();
   setupDebugMessenger();
   createSurface();
@@ -56,7 +56,7 @@ aeDevice::aeDevice(aeWindow &window) : window{window} {
   createCommandPool();
 }
 
-aeDevice::~aeDevice() {
+vmvDevice::~vmvDevice() {
   vkDestroyCommandPool(device_, commandPool, nullptr);
   vkDestroyDevice(device_, nullptr);
 
@@ -68,7 +68,7 @@ aeDevice::~aeDevice() {
   vkDestroyInstance(instance, nullptr);
 }
 
-void aeDevice::createInstance() {
+void vmvDevice::createInstance() {
   if (enableValidationLayers && !checkValidationLayerSupport()) {
     throw std::runtime_error("validation layers requested, but not available!");
   }
@@ -108,7 +108,7 @@ void aeDevice::createInstance() {
   hasGflwRequiredInstanceExtensions();
 }
 
-void aeDevice::pickPhysicalDevice() {
+void vmvDevice::pickPhysicalDevice() {
   uint32_t deviceCount = 0;
   vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
   if (deviceCount == 0) {
@@ -133,7 +133,7 @@ void aeDevice::pickPhysicalDevice() {
   std::cout << "physical device: " << properties.deviceName << std::endl;
 }
 
-void aeDevice::createLogicalDevice() {
+void vmvDevice::createLogicalDevice() {
   QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
   std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -179,7 +179,7 @@ void aeDevice::createLogicalDevice() {
   vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
 }
 
-void aeDevice::createCommandPool() {
+void vmvDevice::createCommandPool() {
   QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
 
   VkCommandPoolCreateInfo poolInfo = {};
@@ -193,9 +193,9 @@ void aeDevice::createCommandPool() {
   }
 }
 
-void aeDevice::createSurface() { window.createWindowSurface(instance, &surface_); }
+void vmvDevice::createSurface() { window.createWindowSurface(instance, &surface_); }
 
-bool aeDevice::isDeviceSuitable(VkPhysicalDevice device) {
+bool vmvDevice::isDeviceSuitable(VkPhysicalDevice device) {
   QueueFamilyIndices indices = findQueueFamilies(device);
 
   bool extensionsSupported = checkDeviceExtensionSupport(device);
@@ -213,7 +213,7 @@ bool aeDevice::isDeviceSuitable(VkPhysicalDevice device) {
          supportedFeatures.samplerAnisotropy;
 }
 
-void aeDevice::populateDebugMessengerCreateInfo(
+void vmvDevice::populateDebugMessengerCreateInfo(
     VkDebugUtilsMessengerCreateInfoEXT &createInfo) {
   createInfo = {};
   createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -227,7 +227,7 @@ void aeDevice::populateDebugMessengerCreateInfo(
   createInfo.pUserData = nullptr;  // Optional
 }
 
-void aeDevice::setupDebugMessenger() {
+void vmvDevice::setupDebugMessenger() {
   if (!enableValidationLayers) return;
   VkDebugUtilsMessengerCreateInfoEXT createInfo;
   populateDebugMessengerCreateInfo(createInfo);
@@ -236,7 +236,7 @@ void aeDevice::setupDebugMessenger() {
   }
 }
 
-bool aeDevice::checkValidationLayerSupport() {
+bool vmvDevice::checkValidationLayerSupport() {
   uint32_t layerCount;
   vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
@@ -261,7 +261,7 @@ bool aeDevice::checkValidationLayerSupport() {
   return true;
 }
 
-std::vector<const char *> aeDevice::getRequiredExtensions() {
+std::vector<const char *> vmvDevice::getRequiredExtensions() {
   uint32_t glfwExtensionCount = 0;
   const char **glfwExtensions;
   glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -275,7 +275,7 @@ std::vector<const char *> aeDevice::getRequiredExtensions() {
   return extensions;
 }
 
-void aeDevice::hasGflwRequiredInstanceExtensions() {
+void vmvDevice::hasGflwRequiredInstanceExtensions() {
   uint32_t extensionCount = 0;
   vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
   std::vector<VkExtensionProperties> extensions(extensionCount);
@@ -298,7 +298,7 @@ void aeDevice::hasGflwRequiredInstanceExtensions() {
   }
 }
 
-bool aeDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+bool vmvDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
   uint32_t extensionCount;
   vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
 
@@ -318,7 +318,7 @@ bool aeDevice::checkDeviceExtensionSupport(VkPhysicalDevice device) {
   return requiredExtensions.empty();
 }
 
-QueueFamilyIndices aeDevice::findQueueFamilies(VkPhysicalDevice device) {
+QueueFamilyIndices vmvDevice::findQueueFamilies(VkPhysicalDevice device) {
   QueueFamilyIndices indices;
 
   uint32_t queueFamilyCount = 0;
@@ -349,7 +349,7 @@ QueueFamilyIndices aeDevice::findQueueFamilies(VkPhysicalDevice device) {
   return indices;
 }
 
-SwapChainSupportDetails aeDevice::querySwapChainSupport(VkPhysicalDevice device) {
+SwapChainSupportDetails vmvDevice::querySwapChainSupport(VkPhysicalDevice device) {
   SwapChainSupportDetails details;
   vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
 
@@ -375,7 +375,7 @@ SwapChainSupportDetails aeDevice::querySwapChainSupport(VkPhysicalDevice device)
   return details;
 }
 
-VkFormat aeDevice::findSupportedFormat(
+VkFormat vmvDevice::findSupportedFormat(
     const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
   for (VkFormat format : candidates) {
     VkFormatProperties props;
@@ -391,7 +391,7 @@ VkFormat aeDevice::findSupportedFormat(
   throw std::runtime_error("failed to find supported format!");
 }
 
-uint32_t aeDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
+uint32_t vmvDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) {
   VkPhysicalDeviceMemoryProperties memProperties;
   vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
   for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -404,7 +404,7 @@ uint32_t aeDevice::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pro
   throw std::runtime_error("failed to find suitable memory type!");
 }
 
-void aeDevice::createBuffer(
+void vmvDevice::createBuffer(
     VkDeviceSize size,
     VkBufferUsageFlags usage,
     VkMemoryPropertyFlags properties,
@@ -435,7 +435,7 @@ void aeDevice::createBuffer(
   vkBindBufferMemory(device_, buffer, bufferMemory, 0);
 }
 
-VkCommandBuffer aeDevice::beginSingleTimeCommands() {
+VkCommandBuffer vmvDevice::beginSingleTimeCommands() {
   VkCommandBufferAllocateInfo allocInfo{};
   allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
   allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
@@ -453,7 +453,7 @@ VkCommandBuffer aeDevice::beginSingleTimeCommands() {
   return commandBuffer;
 }
 
-void aeDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
+void vmvDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
   vkEndCommandBuffer(commandBuffer);
 
   VkSubmitInfo submitInfo{};
@@ -467,7 +467,7 @@ void aeDevice::endSingleTimeCommands(VkCommandBuffer commandBuffer) {
   vkFreeCommandBuffers(device_, commandPool, 1, &commandBuffer);
 }
 
-void aeDevice::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+void vmvDevice::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
   VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
   VkBufferCopy copyRegion{};
@@ -479,7 +479,7 @@ void aeDevice::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize s
   endSingleTimeCommands(commandBuffer);
 }
 
-void aeDevice::copyBufferToImage(
+void vmvDevice::copyBufferToImage(
     VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount) {
   VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -506,7 +506,7 @@ void aeDevice::copyBufferToImage(
   endSingleTimeCommands(commandBuffer);
 }
 
-void aeDevice::createImageWithInfo(
+void vmvDevice::createImageWithInfo(
     const VkImageCreateInfo &imageInfo,
     VkMemoryPropertyFlags properties,
     VkImage &image,

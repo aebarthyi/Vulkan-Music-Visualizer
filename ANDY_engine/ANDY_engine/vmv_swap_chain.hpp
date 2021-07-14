@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ae_device.hpp"
+#include "vmv_device.hpp"
 
 // vulkan headers
 #include <vulkan/vulkan.h>
@@ -10,18 +10,18 @@
 #include <vector>
 #include <memory>
 
-namespace ae {
+namespace vmv {
 
-class aeSwapChain {
+class vmvSwapChain {
  public:
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-  aeSwapChain(aeDevice &deviceRef, VkExtent2D windowExtent);
-  aeSwapChain(aeDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<aeSwapChain> previous);
-  ~aeSwapChain();
+  vmvSwapChain(vmvDevice &deviceRef, VkExtent2D windowExtent);
+  vmvSwapChain(vmvDevice& deviceRef, VkExtent2D windowExtent, std::shared_ptr<vmvSwapChain> previous);
+  ~vmvSwapChain();
 
-  aeSwapChain(const aeSwapChain &) = delete;
-  aeSwapChain& operator=(const aeSwapChain &) = delete;
+  vmvSwapChain(const vmvSwapChain &) = delete;
+  vmvSwapChain& operator=(const vmvSwapChain &) = delete;
 
   VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
   VkRenderPass getRenderPass() { return renderPass; }
@@ -40,7 +40,7 @@ class aeSwapChain {
   VkResult acquireNextImage(uint32_t *imageIndex);
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
-  bool compareSwapFormats(const aeSwapChain& swapChain) const {
+  bool compareSwapFormats(const vmvSwapChain& swapChain) const {
       return swapChain.swapChainDepthFormat == swapChainDepthFormat && swapChain.swapChainImageFormat == swapChainImageFormat;
   }
 
@@ -73,11 +73,11 @@ class aeSwapChain {
   std::vector<VkImage> swapChainImages;
   std::vector<VkImageView> swapChainImageViews;
 
-  aeDevice &device;
+  vmvDevice &device;
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;
-  std::shared_ptr<aeSwapChain> oldSwapChain;
+  std::shared_ptr<vmvSwapChain> oldSwapChain;
 
   std::vector<VkSemaphore> imageAvailableSemaphores;
   std::vector<VkSemaphore> renderFinishedSemaphores;

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ae_model.hpp"
+#include "vmv_model.hpp"
 #include <memory>
 #include <glm/gtc/matrix_transform.hpp>
 
-namespace ae {
+namespace vmv {
 
 	struct TransformComponent {
 		glm::vec3 translation{};
@@ -47,31 +47,31 @@ namespace ae {
 	};
 
 
-	class aeGameObject {
+	class vmvGameObject {
 	public:
 		using id_t = unsigned int;
 
-		static aeGameObject createGameObject() {
+		static vmvGameObject createGameObject() {
 			static id_t currentId = 0;
-			return aeGameObject{ currentId++ };
+			return vmvGameObject{ currentId++ };
 		}
 
-		aeGameObject(const aeGameObject&) = delete;
-		aeGameObject& operator=(const aeGameObject&) = delete;
-		aeGameObject(aeGameObject&&) = default;
-		aeGameObject& operator=(aeGameObject&&) = default;
+		vmvGameObject(const vmvGameObject&) = delete;
+		vmvGameObject& operator=(const vmvGameObject&) = delete;
+		vmvGameObject(vmvGameObject&&) = default;
+		vmvGameObject& operator=(vmvGameObject&&) = default;
 
 		id_t getId() {
 			return id;
 		}
 
-		std::shared_ptr<aeModel> model{};
+		std::shared_ptr<vmvModel> model{};
 		glm::vec3 color{};
 		TransformComponent transform{};
 		RigidBody2D rigidBody2d;
 
 	private:
 		id_t id;
-		aeGameObject(id_t objId) : id{ objId } {}
+		vmvGameObject(id_t objId) : id{ objId } {}
 	};
 }

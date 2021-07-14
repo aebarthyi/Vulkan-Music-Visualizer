@@ -24,6 +24,7 @@
     <ProjectGuid>{1bb96990-d589-4921-9dbe-7513715c2ccf}</ProjectGuid>
     <RootNamespace>ANDYengine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>vmv_engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -82,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\aebar\Downloads\imgui-master\imgui-master;$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -145,39 +146,39 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\aebar\Documents\Visual Studio 2019\Library\STB;C:\Users\aebar\Documents\Visual Studio 2019\Library\tinyloader;C:\Users\aebar\Documents\Visual Studio 2019\Library\glm;C:\Users\aebar\Documents\Visual Studio 2019\Library\glfw-3.3.3.bin.WIN64\include;C:\VulkanSDK\1.2.170.0\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.176.1\Include;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glm;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\aebar\Documents\Visual Studio 2019\Library\glfw-3.3.3.bin.WIN64\lib-vc2019;C:\VulkanSDK\1.2.170.0\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\lib-vc2019;C:\VulkanSDK\1.2.176.1\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ae_camera.cpp" />
-    <ClCompile Include="ae_device.cpp" />
-    <ClCompile Include="ae_model.cpp" />
-    <ClCompile Include="ae_pipeline.cpp" />
-    <ClCompile Include="ae_renderer.cpp" />
-    <ClCompile Include="ae_swap_chain.cpp" />
+    <ClCompile Include="vmv_camera.cpp" />
+    <ClCompile Include="vmv_device.cpp" />
+    <ClCompile Include="vmv_model.cpp" />
+    <ClCompile Include="vmv_pipeline.cpp" />
+    <ClCompile Include="vmv_renderer.cpp" />
+    <ClCompile Include="vmv_swap_chain.cpp" />
     <ClCompile Include="first_app.cpp" />
-    <ClCompile Include="ae_window.cpp" />
+    <ClCompile Include="vmv_window.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ae_camera.hpp" />
-    <ClInclude Include="ae_device.hpp" />
-    <ClInclude Include="ae_game_object.hpp" />
-    <ClInclude Include="ae_model.hpp" />
-    <ClInclude Include="ae_pipeline.hpp" />
-    <ClInclude Include="ae_renderer.hpp" />
-    <ClInclude Include="ae_swap_chain.hpp" />
+    <ClInclude Include="vmv_camera.hpp" />
+    <ClInclude Include="vmv_device.hpp" />
+    <ClInclude Include="vmv_game_object.hpp" />
+    <ClInclude Include="vmv_model.hpp" />
+    <ClInclude Include="vmv_pipeline.hpp" />
+    <ClInclude Include="vmv_renderer.hpp" />
+    <ClInclude Include="vmv_swap_chain.hpp" />
     <ClInclude Include="first_app.hpp" />
-    <ClInclude Include="ae_window.hpp" />
+    <ClInclude Include="vmv_window.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

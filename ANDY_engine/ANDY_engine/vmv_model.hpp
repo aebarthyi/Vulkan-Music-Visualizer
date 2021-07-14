@@ -1,12 +1,12 @@
 #pragma once
-#include "ae_device.hpp"
+#include "vmv_device.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-namespace ae {
-	class aeModel {
+namespace vmv {
+	class vmvModel {
 	public:
 
 		struct Vertex {
@@ -16,11 +16,11 @@ namespace ae {
 			static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
 		};
 
-		aeModel(aeDevice &ae_device, const std::vector<Vertex>& vertices);
-		~aeModel();
+		vmvModel(vmvDevice &vmv_device, const std::vector<Vertex>& vertices);
+		~vmvModel();
 
-		aeModel(const aeModel&) = delete;
-		aeModel& operator=(const aeModel&) = delete;
+		vmvModel(const vmvModel&) = delete;
+		vmvModel& operator=(const vmvModel&) = delete;
 
 		void bind(VkCommandBuffer commandBuffer);
 		void draw(VkCommandBuffer commandBuffer);
@@ -28,7 +28,7 @@ namespace ae {
 	private:
 		void createVertexBuffers(const std::vector<Vertex>& vertices);
 
-		aeDevice& ae_device;
+		vmvDevice& vmv_device;
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
 		uint32_t vertexCount;

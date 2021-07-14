@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ae_window.hpp"
+#include "vmv_window.hpp"
 
 // std lib headers
 #include <string>
 #include <vector>
 
-namespace ae {
+namespace vmv {
 
 struct SwapChainSupportDetails {
   VkSurfaceCapabilitiesKHR capabilities;
@@ -22,7 +22,7 @@ struct QueueFamilyIndices {
   bool isComplete() { return graphicsFamilyHasValue && presentFamilyHasValue; }
 };
 
-class aeDevice {
+class vmvDevice {
  public:
 #ifdef NDEBUG
   const bool enableValidationLayers = false;
@@ -30,14 +30,14 @@ class aeDevice {
   const bool enableValidationLayers = true;
 #endif
 
-  aeDevice(aeWindow &window);
-  ~aeDevice();
+  vmvDevice(vmvWindow &window);
+  ~vmvDevice();
 
   // Not copyable or movable
-  aeDevice(const aeDevice &) = delete;
-  void operator=(const aeDevice &) = delete;
-  aeDevice(aeDevice &&) = delete;
-  aeDevice &operator=(aeDevice &&) = delete;
+  vmvDevice(const vmvDevice &) = delete;
+  void operator=(const vmvDevice &) = delete;
+  vmvDevice(vmvDevice &&) = delete;
+  vmvDevice &operator=(vmvDevice &&) = delete;
 
   VkCommandPool getCommandPool() { return commandPool; }
   VkDevice device() { return device_; }
@@ -93,7 +93,7 @@ class aeDevice {
   VkInstance instance;
   VkDebugUtilsMessengerEXT debugMessenger;
   VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
-  aeWindow &window;
+  vmvWindow &window;
   VkCommandPool commandPool;
 
   VkDevice device_;

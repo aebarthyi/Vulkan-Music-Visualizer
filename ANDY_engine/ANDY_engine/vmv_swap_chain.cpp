@@ -1,4 +1,4 @@
-#include "ae_swap_chain.hpp"
+#include "vmv_swap_chain.hpp"
 
 // std
 #include <array>
@@ -9,21 +9,21 @@
 #include <set>
 #include <stdexcept>
 
-namespace ae {
+namespace vmv {
 
-aeSwapChain::aeSwapChain(aeDevice &deviceRef, VkExtent2D extent)
+vmvSwapChain::vmvSwapChain(vmvDevice &deviceRef, VkExtent2D extent)
     : device{deviceRef}, windowExtent{extent} {
     init();
 }
 
-aeSwapChain::aeSwapChain(aeDevice& deviceRef, VkExtent2D extent, std::shared_ptr<aeSwapChain> previous)
+vmvSwapChain::vmvSwapChain(vmvDevice& deviceRef, VkExtent2D extent, std::shared_ptr<vmvSwapChain> previous)
     : device{ deviceRef }, windowExtent{ extent }, oldSwapChain{ previous } {
     init();
 
     oldSwapChain = nullptr;
 }
 
-void aeSwapChain::init() {
+void vmvSwapChain::init() {
     createSwapChain();
     createImageViews();
     createRenderPass();
@@ -32,7 +32,7 @@ void aeSwapChain::init() {
     createSyncObjects();
 }
 
-aeSwapChain::~aeSwapChain() {
+vmvSwapChain::~vmvSwapChain() {
   for (auto imageView : swapChainImageViews) {
     vkDestroyImageView(device.device(), imageView, nullptr);
   }
@@ -63,7 +63,7 @@ aeSwapChain::~aeSwapChain() {
   }
 }
 
-VkResult aeSwapChain::acquireNextImage(uint32_t *imageIndex) {
+VkResult vmvSwapChain::acquireNextImage(uint32_t *imageIndex) {
   vkWaitForFences(
       device.device(),
       1,
@@ -82,7 +82,7 @@ VkResult aeSwapChain::acquireNextImage(uint32_t *imageIndex) {
   return result;
 }
 
-VkResult aeSwapChain::submitCommandBuffers(
+VkResult vmvSwapChain::submitCommandBuffers(
     const VkCommandBuffer *buffers, uint32_t *imageIndex) {
   if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
     vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
@@ -130,7 +130,7 @@ VkResult aeSwapChain::submitCommandBuffers(
   return result;
 }
 
-void aeSwapChain::createSwapChain() {
+void vmvSwapChain::createSwapChain() {
   SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
   VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
@@ -191,7 +191,7 @@ void aeSwapChain::createSwapChain() {
   swapChainExtent = extent;
 }
 
-void aeSwapChain::createImageViews() {
+void vmvSwapChain::createImageViews() {
   swapChainImageViews.resize(swapChainImages.size());
   for (size_t i = 0; i < swapChainImages.size(); i++) {
     VkImageViewCreateInfo viewInfo{};
@@ -212,7 +212,7 @@ void aeSwapChain::createImageViews() {
   }
 }
 
-void aeSwapChain::createRenderPass() {
+void vmvSwapChain::createRenderPass() {
   VkAttachmentDescription depthAttachment{};
   depthAttachment.format = findDepthFormat();
   depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -270,7 +270,7 @@ void aeSwapChain::createRenderPass() {
   }
 }
 
-void aeSwapChain::createFramebuffers() {
+void vmvSwapChain::createFramebuffers() {
   swapChainFramebuffers.resize(imageCount());
   for (size_t i = 0; i < imageCount(); i++) {
     std::array<VkImageView, 2> attachments = {swapChainImageViews[i], depthImageViews[i]};
@@ -295,7 +295,7 @@ void aeSwapChain::createFramebuffers() {
   }
 }
 
-void aeSwapChain::createDepthResources() {
+void vmvSwapChain::createDepthResources() {
   VkFormat depthFormat = findDepthFormat();
   swapChainDepthFormat = depthFormat;
   VkExtent2D swapChainExtent = getSwapChainExtent();
@@ -344,7 +344,7 @@ void aeSwapChain::createDepthResources() {
   }
 }
 
-void aeSwapChain::createSyncObjects() {
+void vmvSwapChain::createSyncObjects() {
   imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
   renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
   inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -368,7 +368,7 @@ void aeSwapChain::createSyncObjects() {
   }
 }
 
-VkSurfaceFormatKHR aeSwapChain::chooseSwapSurfaceFormat(
+VkSurfaceFormatKHR vmvSwapChain::chooseSwapSurfaceFormat(
     const std::vector<VkSurfaceFormatKHR> &availableFormats) {
   for (const auto &availableFormat : availableFormats) {
     if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
@@ -380,7 +380,7 @@ VkSurfaceFormatKHR aeSwapChain::chooseSwapSurfaceFormat(
   return availableFormats[0];
 }
 
-VkPresentModeKHR aeSwapChain::chooseSwapPresentMode(
+VkPresentModeKHR vmvSwapChain::chooseSwapPresentMode(
     const std::vector<VkPresentModeKHR> &availablePresentModes) {
   for (const auto &availablePresentMode : availablePresentModes) {
     if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
@@ -400,7 +400,7 @@ VkPresentModeKHR aeSwapChain::chooseSwapPresentMode(
   return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D aeSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
+VkExtent2D vmvSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities) {
   if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
     return capabilities.currentExtent;
   } else {
@@ -416,7 +416,7 @@ VkExtent2D aeSwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabil
   }
 }
 
-VkFormat aeSwapChain::findDepthFormat() {
+VkFormat vmvSwapChain::findDepthFormat() {
   return device.findSupportedFormat(
       {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
       VK_IMAGE_TILING_OPTIMAL,

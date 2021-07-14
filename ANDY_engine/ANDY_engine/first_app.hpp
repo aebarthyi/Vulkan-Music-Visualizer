@@ -1,14 +1,14 @@
 #pragma once
 
-#include "ae_window.hpp"
-#include "ae_game_object.hpp"
-#include "ae_device.hpp"
-#include "ae_renderer.hpp"
+#include "vmv_window.hpp"
+#include "vmv_game_object.hpp"
+#include "vmv_device.hpp"
+#include "vmv_renderer.hpp"
 #include <memory>
 #include <vector>
 #include <iostream>
 
-namespace ae {
+namespace vmv {
 	class FirstApp {
 	public:
 		static constexpr int WIDTH = 800;
@@ -25,9 +25,9 @@ namespace ae {
 	private:
 		void loadGameObjects();
 
-		aeWindow ae_Window{ WIDTH, HEIGHT, "HI VULKAN!" };
-		aeDevice ae_Device{ ae_Window };
-		aeRenderer ae_Renderer{ ae_Window, ae_Device };
-		std::vector<aeGameObject> gameObjects;
+		vmvWindow vmv_Window{ WIDTH, HEIGHT, "HI VULKAN!" };
+		vmvDevice vmv_Device{ vmv_Window };
+		vmvRenderer vmv_Renderer{ vmv_Window, vmv_Device };
+		std::vector<vmvGameObject> gameObjects;
 	};
 }

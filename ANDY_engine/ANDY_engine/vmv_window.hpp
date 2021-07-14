@@ -4,14 +4,14 @@
 #include <GLFW/glfw3.h>
 #include <string>
 
-namespace ae {
-	class aeWindow {
+namespace vmv {
+	class vmvWindow {
 	public:
-		aeWindow(int w, int h, std::string name);
-		~aeWindow();
+		vmvWindow(int w, int h, std::string name);
+		~vmvWindow();
 
-		aeWindow(const aeWindow&) = delete;
-		aeWindow& operator=(const aeWindow&) = delete;
+		vmvWindow(const vmvWindow&) = delete;
+		vmvWindow& operator=(const vmvWindow&) = delete;
 
 		bool shouldClose() { return glfwWindowShouldClose(window); }
 

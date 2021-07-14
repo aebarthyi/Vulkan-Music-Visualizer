@@ -1,33 +1,33 @@
 #pragma once
 
-#include "ae_window.hpp"
-#include "ae_pipeline.hpp"
-#include "ae_game_object.hpp"
-#include "ae_device.hpp"
-#include "ae_renderer.hpp"
-#include "ae_camera.hpp"
+#include "vmv_window.hpp"
+#include "vmv_pipeline.hpp"
+#include "vmv_game_object.hpp"
+#include "vmv_device.hpp"
+#include "vmv_renderer.hpp"
+#include "vmv_camera.hpp"
 #include <memory>
 #include <vector>
 #include <iostream>
 
-namespace ae {
+namespace vmv {
 	class SimpleRenderSystem {
 	public:
 
-		SimpleRenderSystem(aeDevice& device, VkRenderPass renderPass);
+		SimpleRenderSystem(vmvDevice& device, VkRenderPass renderPass);
 		~SimpleRenderSystem();
 
 		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-		void renderGameObjects(VkCommandBuffer commandbuffer, std::vector<aeGameObject> &gameObjects, const aeCamera &camera);
+		void renderGameObjects(VkCommandBuffer commandbuffer, std::vector<vmvGameObject> &gameObjects, const vmvCamera &camera);
 
 	private:
 		void createPipelineLayout();
 		void createPipeline(VkRenderPass renderPass);
 
-		aeDevice &ae_Device;
-		std::unique_ptr<aePipeline> ae_Pipeline;
+		vmvDevice &vmv_Device;
+		std::unique_ptr<vmvPipeline> vmv_Pipeline;
 		VkPipelineLayout pipelineLayout;
 	};
 }

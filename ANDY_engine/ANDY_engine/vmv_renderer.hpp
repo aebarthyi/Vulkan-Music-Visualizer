@@ -1,25 +1,25 @@
 #pragma once
 
-#include "ae_window.hpp"
-#include "ae_device.hpp"
-#include "ae_swap_chain.hpp"
+#include "vmv_window.hpp"
+#include "vmv_device.hpp"
+#include "vmv_swap_chain.hpp"
 #include <memory>
 #include <vector>
 #include <iostream>
 #include <cassert>
 
-namespace ae {
-	class aeRenderer {
+namespace vmv {
+	class vmvRenderer {
 	public:
 
-		aeRenderer(aeWindow& window, aeDevice& device);
-		~aeRenderer();
+		vmvRenderer(vmvWindow& window, vmvDevice& device);
+		~vmvRenderer();
 
-		aeRenderer(const aeRenderer&) = delete;
-		aeRenderer& operator=(const aeRenderer&) = delete;
+		vmvRenderer(const vmvRenderer&) = delete;
+		vmvRenderer& operator=(const vmvRenderer&) = delete;
 
-		VkRenderPass getSwapChainRenderPass() const { return ae_SwapChain->getRenderPass(); }
-		float getAspectRatio() const { return ae_SwapChain->extentAspectRatio(); }
+		VkRenderPass getSwapChainRenderPass() const { return vmv_SwapChain->getRenderPass(); }
+		float getAspectRatio() const { return vmv_SwapChain->extentAspectRatio(); }
 
 		VkCommandBuffer beginFrame();
 		bool isFrameInProgress() const { return isFrameStarted; }
@@ -43,9 +43,9 @@ namespace ae {
 		void freeCommandBuffers();
 		void recreateSwapChain();
 
-		aeWindow& ae_Window;
-		aeDevice& ae_Device;
-		std::unique_ptr<aeSwapChain> ae_SwapChain;
+		vmvWindow& vmv_Window;
+		vmvDevice& vmv_Device;
+		std::unique_ptr<vmvSwapChain> vmv_SwapChain;
 		std::vector<VkCommandBuffer> commandBuffers;
 		
 		uint32_t currentImageIndex;

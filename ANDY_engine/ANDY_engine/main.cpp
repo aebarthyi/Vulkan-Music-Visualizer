@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 int main() {
-	ae::FirstApp app{};
+	vmv::FirstApp app{};
 
 	try {
 		app.run();
