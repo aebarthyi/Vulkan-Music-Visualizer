@@ -13,6 +13,7 @@ namespace vmv {
 	public:
 		static constexpr int WIDTH = 800;
 		static constexpr int HEIGHT = 600;
+		const float MAX_FRAME_TIME = 16.67;
 
 		FirstApp();
 		~FirstApp();

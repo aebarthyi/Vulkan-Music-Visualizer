@@ -55,10 +55,6 @@ namespace vmv {
 	}
 
 	void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandbuffer, std::vector<vmvGameObject> &gameObjects, const vmvCamera& camera) {
-		for (auto& obj : gameObjects) {
-			obj.transform.rotation.y = glm::mod<float>(obj.transform.rotation.y + 0.01f, 2.f * glm::pi<float>());
-			obj.transform.rotation.x = glm::mod<float>(obj.transform.rotation.x + 0.01f, 2.f * glm::pi<float>());
-		}
 
 		vmv_Pipeline->bind(commandbuffer);
 
