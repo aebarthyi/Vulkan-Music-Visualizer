@@ -45,7 +45,7 @@
     <ClCompile Include="vmv_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_movement.cpp">
+    <ClCompile Include="movement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <ClInclude Include="vmv_camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="keyboard_movement.hpp">
+    <ClInclude Include="movement.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

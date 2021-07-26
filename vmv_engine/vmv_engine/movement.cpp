@@ -1,8 +1,8 @@
-#include "keyboard_movement.hpp"
+#include "movement.hpp"
 
 namespace vmv {
-	void KeyboardMovementController::moveInPlaneXZ(GLFWwindow* window, float dt, vmvGameObject& gameObject) {
-		glm::vec3 rotate{ 0 };
+	void MovementController::moveInPlaneXZ(GLFWwindow* window, float dt, vmvGameObject& gameObject) {
+		/*glm::vec3 rotate{ 0 };
 		if (glfwGetKey(window, keys.lookRight) == GLFW_PRESS) rotate.y += 1.f;
 		if (glfwGetKey(window, keys.lookLeft) == GLFW_PRESS) rotate.y -= 1.f;
 		if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) rotate.x += 1.f;
@@ -13,7 +13,9 @@ namespace vmv {
 		}
 
 		gameObject.transform.rotation.x = glm::clamp(gameObject.transform.rotation.x, -1.5f, 1.5f);
-		gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());
+		gameObject.transform.rotation.y = glm::mod(gameObject.transform.rotation.y, glm::two_pi<float>());*/
+
+		//TODO : CHANGE ABOVE TO MOUSE CONTROLS
 
 		float yaw = gameObject.transform.rotation.y;
 		const glm::vec3 forwardDir{ sin(yaw), 0.f, cos(yaw) };
