@@ -26,7 +26,7 @@ namespace vmv {
 	private:
 		void loadGameObjects();
 
-		vmvWindow vmv_Window{ WIDTH, HEIGHT, "HI VULKAN!" };
+		vmvWindow vmv_Window{ WIDTH, HEIGHT, "VMV ENGINE v0.2" };
 		vmvDevice vmv_Device{ vmv_Window };
 		vmvRenderer vmv_Renderer{ vmv_Window, vmv_Device };
 		std::vector<vmvGameObject> gameObjects;

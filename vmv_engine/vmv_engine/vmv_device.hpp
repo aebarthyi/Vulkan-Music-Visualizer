@@ -72,6 +72,10 @@ class vmvDevice {
 
   VkPhysicalDeviceProperties properties;
 
+  VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
+  VkInstance getInstance() { return instance; }
+  uint32_t getGraphicsQueueFamily() { return findPhysicalQueueFamilies().graphicsFamily; }
+
  private:
   void createInstance();
   void setupDebugMessenger();

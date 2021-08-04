@@ -2,6 +2,7 @@
 #include "simple_render_system.hpp"
 #include "movement.hpp"
 #include "vmv_camera.hpp"
+#include "test_ui.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -23,8 +24,20 @@ namespace vmv {
 
     void FirstApp::run() {
 
+        vmvTestUI testUI{
+            vmv_Window,
+            vmv_Device,
+            vmv_Renderer.getSwapChainRenderPass(),
+            vmv_Renderer.getImageCount()
+        };
+
         SimpleRenderSystem simpleRenderSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass() };
+
         vmvCamera camera{};
+
+        static float fov = 50.f;
+        static float scale = 1.f;
+        static float rotation = 0.0f;
 
         glfwSetInputMode(vmv_Window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -42,17 +55,46 @@ namespace vmv {
 
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
             
-
+          
             cameraController.moveInPlaneXZ(vmv_Window.getWindow(), frameTime, viewerObject);
             camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
+            gameObjects[0].transform.scale = glm::vec3(scale);
+            gameObjects[0].transform.rotation.y = glm::radians(rotation);
+
             float aspect = vmv_Renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-            camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
+            camera.setPerspectiveProjection(glm::radians(fov), aspect, 0.1f, 10.f);
 
             if (auto commandBuffer = vmv_Renderer.beginFrame()) {
+                testUI.newFrame();
                 vmv_Renderer.beginSwapChainRenderPass(commandBuffer);
                 simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+
+                {
+                    ImGui::Begin("TEST_UI");
+                    ImGui::Text(
+                        "Some primitive UI elements.");
+
+                    ImGui::SliderFloat("FOV", &fov, 0.0f, 180.0f);
+                    ImGui::SliderFloat("SCALE", &scale, 0.0f, 5.0f);
+                    ImGui::SliderFloat("X-AXIS ROTATION", &rotation, 0.0f, 360.0f);
+
+                    ImGui::Text(
+                        "Application average %.3f ms/frame (%.1f FPS)",
+                        1000.0f / ImGui::GetIO().Framerate,
+                        ImGui::GetIO().Framerate
+                    );
+
+                    ImGui::ShowDemoWindow();
+                    ImGui::End();
+                }
+
+
+
+                testUI.render(commandBuffer);
+
+
                 vmv_Renderer.endSwapChainRenderPass(commandBuffer);
                 vmv_Renderer.endFrame();
             }
@@ -111,12 +153,12 @@ namespace vmv {
     }
 
     void FirstApp::loadGameObjects() {
-        std::shared_ptr<vmvModel> vmv_Model = createCubeModel(vmv_Device, { .0f, .0f, .0f });
-        auto cube = vmvGameObject::createGameObject();
-        cube.model = vmv_Model;
-        cube.transform.translation = { .0f, .0f, 3.5f };
-        cube.transform.scale = { .5f, .5f, .5f };
-        gameObjects.push_back(std::move(cube));
+        std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "C:\\Users\\aebar\\Documents\\GitHub\\Vulkan-Music-Visualizer\\vmv_engine\\vmv_engine\\models\\colored_cube.obj");
+        auto gameObj = vmvGameObject::createGameObject();
+        gameObj.model = vmv_Model;
+        gameObj.transform.translation = { .0f, .0f, 3.5f };
+        gameObj.transform.scale = glm::vec3(1.f);
+        gameObjects.push_back(std::move(gameObj));
     }
 
 }  // namespace vmv

@@ -36,7 +36,7 @@ namespace vmv {
 		void endFrame();
 		void beginSwapChainRenderPass(VkCommandBuffer commandBuffer);
 		void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
-
+		uint32_t getImageCount() const { return vmv_SwapChain->imageCount(); }
 
 	private:
 		void createCommandBuffers();

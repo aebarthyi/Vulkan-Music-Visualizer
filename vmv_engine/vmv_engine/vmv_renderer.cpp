@@ -21,7 +21,7 @@ namespace vmv {
 			glfwWaitEvents();
 		}
 
-		vkDeviceWaitIdle(vmv_Device.device());
+		vkDeviceWaitIdle(vmv_Device.device());		
 
 		if (vmv_SwapChain == nullptr) {
 			vmv_SwapChain = std::make_unique<vmvSwapChain>(vmv_Device, extent);

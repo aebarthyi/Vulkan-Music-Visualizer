@@ -128,7 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.176.1\Include;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glm;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aebar\Documents\Visual Studio 2019\Libraries\imgui;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\tinyobjloader;C:\VulkanSDK\1.2.176.1\Include;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glm;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +146,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\VulkanSDK\1.2.176.1\Include;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glm;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\aebar\Documents\Visual Studio 2019\Libraries\imgui;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\tinyobjloader;C:\VulkanSDK\1.2.176.1\Include;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glm;C:\Users\aebar\Documents\Visual Studio 2019\Libraries\glfw-3.3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,7 +158,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="movement.cpp" />
+    <ClCompile Include="test_ui.cpp" />
     <ClCompile Include="vmv_camera.cpp" />
     <ClCompile Include="vmv_device.cpp" />
     <ClCompile Include="vmv_model.cpp" />
@@ -172,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="movement.hpp" />
+    <ClInclude Include="test_ui.hpp" />
     <ClInclude Include="vmv_camera.hpp" />
     <ClInclude Include="vmv_device.hpp" />
     <ClInclude Include="vmv_game_object.hpp" />
@@ -180,6 +189,7 @@
     <ClInclude Include="vmv_renderer.hpp" />
     <ClInclude Include="vmv_swap_chain.hpp" />
     <ClInclude Include="first_app.hpp" />
+    <ClInclude Include="vmv_utils.hpp" />
     <ClInclude Include="vmv_window.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
   </ItemGroup>
