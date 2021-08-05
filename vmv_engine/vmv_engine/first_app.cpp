@@ -15,6 +15,7 @@
 #include <cassert>
 #include <stdexcept>
 #include <chrono>
+#include <filesystem>
 
 namespace vmv {
 
@@ -38,6 +39,7 @@ namespace vmv {
         static float fov = 50.f;
         static float scale = 1.f;
         static float rotation = 0.0f;
+        static float sensitivity = 1.0f;
 
         glfwSetInputMode(vmv_Window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
@@ -54,10 +56,6 @@ namespace vmv {
             currentTime = newTime;
 
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
-            
-          
-            cameraController.moveInPlaneXZ(vmv_Window.getWindow(), frameTime, viewerObject);
-            camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
             gameObjects[0].transform.scale = glm::vec3(scale);
             gameObjects[0].transform.rotation.y = glm::radians(rotation);
@@ -79,6 +77,7 @@ namespace vmv {
                     ImGui::SliderFloat("FOV", &fov, 0.0f, 180.0f);
                     ImGui::SliderFloat("SCALE", &scale, 0.0f, 5.0f);
                     ImGui::SliderFloat("X-AXIS ROTATION", &rotation, 0.0f, 360.0f);
+                    ImGui::SliderFloat("MOUSE SENSITIVITY", &sensitivity, 0.0f, 5.0f);
 
                     ImGui::Text(
                         "Application average %.3f ms/frame (%.1f FPS)",
@@ -86,14 +85,22 @@ namespace vmv {
                         ImGui::GetIO().Framerate
                     );
 
-                    ImGui::ShowDemoWindow();
+                    if (glfwGetKey(vmv_Window.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) ImGui::SetWindowFocus();
+
+                    if (ImGui::IsWindowFocused() || ImGui::IsWindowHovered()) {
+                        glfwSetInputMode(vmv_Window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                    }
+                    else {
+                        glfwSetInputMode(vmv_Window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                        cameraController.moveMouse(vmv_Window.getWindow(), frameTime, viewerObject, sensitivity);
+                    }
+
+                    cameraController.moveKeyboard(vmv_Window.getWindow(), frameTime, viewerObject);
+                    camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
                     ImGui::End();
                 }
 
-
-
                 testUI.render(commandBuffer);
-
 
                 vmv_Renderer.endSwapChainRenderPass(commandBuffer);
                 vmv_Renderer.endFrame();
@@ -103,57 +110,8 @@ namespace vmv {
         vkDeviceWaitIdle(vmv_Device.device());
     }
 
-    std::unique_ptr<vmvModel> createCubeModel(vmvDevice& device, glm::vec3 offset) {
-        vmvModel::Builder modelBuilder{};
-        modelBuilder.vertices = {
-            // left face (white)
-            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-            {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-            {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-
-            // right face (yellow)
-            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-            {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-            {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-
-            // top face (orange, remember y axis points down)
-            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-            {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-            {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-
-            // bottom face (red)
-            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-            {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-            {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-
-            // nose face (blue)
-            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-            {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-            {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-
-            // tail face (green)
-            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-            {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-            {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        };
-        for (auto& v : modelBuilder.vertices) {
-            v.position += offset;
-        }
-
-        modelBuilder.indices = { 0,  1,  2,  0,  3,  1,  4,  5,  6,  4,  7,  5,  8,  9,  10, 8,  11, 9,
-                                12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21 };
-
-        return std::make_unique<vmvModel>(device, modelBuilder);
-    }
-
     void FirstApp::loadGameObjects() {
-        std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "C:\\Users\\aebar\\Documents\\GitHub\\Vulkan-Music-Visualizer\\vmv_engine\\vmv_engine\\models\\colored_cube.obj");
+        std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/colored_cube.obj");
         auto gameObj = vmvGameObject::createGameObject();
         gameObj.model = vmv_Model;
         gameObj.transform.translation = { .0f, .0f, 3.5f };

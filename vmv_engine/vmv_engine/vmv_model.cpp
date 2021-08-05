@@ -5,6 +5,7 @@
 #include <tiny_obj_loader.h>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/hash.hpp>
@@ -130,6 +131,7 @@ namespace vmv {
 		std::string err;
 
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str())) {
+			std::cout << "error obj not found" << std::endl;
 			throw std::runtime_error(warn + err);
 		}
 

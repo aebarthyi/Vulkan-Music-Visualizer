@@ -15,12 +15,13 @@ namespace vmv {
             int moveDown = GLFW_KEY_LEFT_SHIFT;
 		};
 
-        void moveInPlaneXZ(GLFWwindow* window, float dt, vmvGameObject& gameObject);
+        void moveKeyboard(GLFWwindow* window, float dt, vmvGameObject& gameObject);
+        void moveMouse(GLFWwindow* window, float dt, vmvGameObject& gameObject, float sensitivity);
 
         KeyMappings keys{};
         float moveSpeed{ 3.f };
-        float sensitivity{ 1.5f };
+        double xPos = 0;
+        double yPos = 0;
 	};
-
 
 }
