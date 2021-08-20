@@ -37,7 +37,7 @@ namespace vmv {
         vmvCamera camera{};
 
         static float fov = 50.f;
-        static float scale = 1.f;
+        static glm::vec3 scale = glm::vec3(3.f, 1.5f, 3.f);
         static float rotation = 0.0f;
         static float sensitivity = 1.0f;
 
@@ -57,7 +57,7 @@ namespace vmv {
 
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
-            gameObjects[0].transform.scale = glm::vec3(scale);
+            gameObjects[0].transform.scale = scale;
             gameObjects[0].transform.rotation.y = glm::radians(rotation);
 
             float aspect = vmv_Renderer.getAspectRatio();
@@ -75,7 +75,7 @@ namespace vmv {
                         "Some primitive UI elements.");
 
                     ImGui::SliderFloat("FOV", &fov, 0.0f, 180.0f);
-                    ImGui::SliderFloat("SCALE", &scale, 0.0f, 5.0f);
+                    ImGui::SliderFloat("SCALE - Y", &scale.y, 0.0f, 5.0f);
                     ImGui::SliderFloat("X-AXIS ROTATION", &rotation, 0.0f, 360.0f);
                     ImGui::SliderFloat("MOUSE SENSITIVITY", &sensitivity, 0.0f, 5.0f);
 
@@ -111,11 +111,11 @@ namespace vmv {
     }
 
     void FirstApp::loadGameObjects() {
-        std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/colored_cube.obj");
+        std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/smooth_vase.obj");
         auto gameObj = vmvGameObject::createGameObject();
         gameObj.model = vmv_Model;
-        gameObj.transform.translation = { .0f, .0f, 3.5f };
-        gameObj.transform.scale = glm::vec3(1.f);
+        gameObj.transform.translation = { .0f, .5f, 3.5f };
+        gameObj.transform.scale = glm::vec3(3.f, 1.5f, 3.f);
         gameObjects.push_back(std::move(gameObj));
     }
 

@@ -169,6 +169,7 @@
     <ClCompile Include="test_ui.cpp" />
     <ClCompile Include="vmv_camera.cpp" />
     <ClCompile Include="vmv_device.cpp" />
+    <ClCompile Include="vmv_game_object.cpp" />
     <ClCompile Include="vmv_model.cpp" />
     <ClCompile Include="vmv_pipeline.cpp" />
     <ClCompile Include="vmv_renderer.cpp" />
