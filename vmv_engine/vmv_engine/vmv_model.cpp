@@ -29,13 +29,7 @@ namespace vmv {
 	}
 
 	vmvModel::~vmvModel() {
-		vkDestroyBuffer(vmv_device.device(), vertexBuffer, nullptr);
-		vkFreeMemory(vmv_device.device(), vertexBufferMemory, nullptr);
-
-		if (hasIndexBuffer) {
-			vkDestroyBuffer(vmv_device.device(), indexBuffer, nullptr);
-			vkFreeMemory(vmv_device.device(), indexBufferMemory, nullptr);
-		}
+		
 	}
 
 	std::unique_ptr<vmvModel> vmvModel::createModelFromFile(vmvDevice& device, const std::string& filepath) {
@@ -48,18 +42,12 @@ namespace vmv {
 		vertexCount = static_cast<uint32_t>(vertices.size());
 		assert(vertexCount >= 3 && "Vertex count must be at least 3");
 		VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
-		VkBuffer stagingBuffer;
-		VkDeviceMemory stagingBufferMemory;
-		vmv_device.createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-		void* data;
-		vkMapMemory(vmv_device.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
-		vkUnmapMemory(vmv_device.device(), stagingBufferMemory);
-		vmv_device.createBuffer(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
-		vmv_device.copyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-		vkDestroyBuffer(vmv_device.device(), stagingBuffer, nullptr);
-		vkFreeMemory(vmv_device.device(), stagingBufferMemory, nullptr);
-
+		uint32_t vertexSize = sizeof(vertices[0]);
+		vmvBuffer stagingBuffer{ vmv_device, vertexSize, vertexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
+		stagingBuffer.map();
+		stagingBuffer.writeToBuffer((void*)vertices.data());
+		vertexBuffer = std::make_unique<vmvBuffer>(vmv_device, vertexSize, vertexCount, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		vmv_device.copyBuffer(stagingBuffer.getBuffer(), vertexBuffer->getBuffer(), bufferSize);
 	}
 
 	void vmvModel::createIndexBuffers(const std::vector<uint32_t> &indices) {
@@ -71,25 +59,20 @@ namespace vmv {
 
 		assert(vertexCount >= 3 && "Vertex count must be at least 3");
 		VkDeviceSize bufferSize = sizeof(indices[0]) * indexCount;
-		VkBuffer stagingBuffer;
-		VkDeviceMemory stagingBufferMemory;
-		vmv_device.createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
-		void* data;
-		vkMapMemory(vmv_device.device(), stagingBufferMemory, 0, bufferSize, 0, &data);
-		memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
-		vkUnmapMemory(vmv_device.device(), stagingBufferMemory);
-		vmv_device.createBuffer(bufferSize, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
-		vmv_device.copyBuffer(stagingBuffer, indexBuffer, bufferSize);
-		vkDestroyBuffer(vmv_device.device(), stagingBuffer, nullptr);
-		vkFreeMemory(vmv_device.device(), stagingBufferMemory, nullptr);
+		uint32_t indexSize = sizeof(indices[0]);
+		vmvBuffer stagingBuffer{ vmv_device, indexSize, indexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT };
+		stagingBuffer.map();
+		stagingBuffer.writeToBuffer((void*)indices.data());
+		indexBuffer = std::make_unique<vmvBuffer>(vmv_device, indexSize, indexCount, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+		vmv_device.copyBuffer(stagingBuffer.getBuffer(), indexBuffer->getBuffer(), bufferSize);
 	}
 
 	void vmvModel::bind(VkCommandBuffer commandBuffer) {
-		VkBuffer buffers[] = { vertexBuffer };
+		VkBuffer buffers[] = { vertexBuffer->getBuffer() };
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
 		if (hasIndexBuffer) {
-			vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+			vkCmdBindIndexBuffer(commandBuffer, indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT32);
 		}
 	}
 

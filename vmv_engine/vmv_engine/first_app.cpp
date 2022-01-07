@@ -3,6 +3,7 @@
 #include "movement.hpp"
 #include "vmv_camera.hpp"
 #include "test_ui.hpp"
+#include "vmv_buffer.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -19,11 +20,45 @@
 
 namespace vmv {
 
-    FirstApp::FirstApp() { loadGameObjects(); }
+    struct GlobalUbo {
+        glm::mat4 projectionView{ 1.f };
+        glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f });
+    };
+
+    FirstApp::FirstApp() { 
+        globalPool = vmvDescriptorPool::Builder(vmv_Device)
+            .setMaxSets(vmvSwapChain::MAX_FRAMES_IN_FLIGHT)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vmvSwapChain::MAX_FRAMES_IN_FLIGHT)
+            .build();
+        loadGameObjects(); 
+    }
 
     FirstApp::~FirstApp() {}
 
     void FirstApp::run() {
+        std::vector<std::unique_ptr<vmvBuffer>> uboBuffers(vmvSwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < uboBuffers.size(); i++) {
+            uboBuffers[i] = std::make_unique<vmvBuffer>(
+                vmv_Device,
+                sizeof(GlobalUbo),
+                1,
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+                );
+            uboBuffers[i]->map();
+        }
+
+        auto globalSetLayout = vmvDescriptorSetLayout::Builder(vmv_Device)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+            .build();
+
+        std::vector<VkDescriptorSet> globalDescriptorSets(vmvSwapChain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < globalDescriptorSets.size(); i++) {
+            auto bufferInfo = uboBuffers[i]->descriptorInfo();
+            vmvDescriptorWriter(*globalSetLayout, *globalPool)
+                .writeBuffer(0, &bufferInfo)
+                .build(globalDescriptorSets[i]);
+        }
 
         vmvTestUI testUI{
             vmv_Window,
@@ -32,7 +67,7 @@ namespace vmv {
             vmv_Renderer.getImageCount()
         };
 
-        SimpleRenderSystem simpleRenderSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass() };
+        SimpleRenderSystem simpleRenderSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
 
         vmvCamera camera{};
 
@@ -58,16 +93,28 @@ namespace vmv {
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
             gameObjects[0].transform.scale = scale;
-            gameObjects[0].transform.rotation.y = glm::radians(rotation);
+            gameObjects[0].transform.rotation.x = glm::radians(rotation);
 
             float aspect = vmv_Renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
-            camera.setPerspectiveProjection(glm::radians(fov), aspect, 0.1f, 10.f);
+            camera.setPerspectiveProjection(glm::radians(fov), aspect, 0.1f, 100.f);
 
             if (auto commandBuffer = vmv_Renderer.beginFrame()) {
+                int frameIndex = vmv_Renderer.getFrameIndex();
+                FrameInfo frameInfo{
+                    frameIndex,
+                    frameTime,
+                    commandBuffer,
+                    camera,
+                    globalDescriptorSets[frameIndex]
+                };
+                GlobalUbo ubo{};
+                ubo.projectionView = camera.getProjection() * camera.getView();
+                uboBuffers[frameIndex]->writeToBuffer(&ubo);
+                uboBuffers[frameIndex]->flush();
                 testUI.newFrame();
                 vmv_Renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(commandBuffer, gameObjects, camera);
+                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
 
                 {
                     ImGui::Begin("TEST_UI");

@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include <memory>
+#include "vmv_buffer.hpp"
 
 namespace vmv {
 	class vmvModel {
@@ -53,14 +54,13 @@ namespace vmv {
 		void createIndexBuffers(const std::vector<uint32_t>& indices);
 
 		vmvDevice& vmv_device;
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vertexBufferMemory;
+		
+		std::unique_ptr<vmvBuffer> vertexBuffer;
 		uint32_t vertexCount;
 
 		bool hasIndexBuffer = false;
 
-		VkBuffer indexBuffer;
-		VkDeviceMemory indexBufferMemory;
+		std::unique_ptr<vmvBuffer> indexBuffer;
 		uint32_t indexCount;
 	};
 }

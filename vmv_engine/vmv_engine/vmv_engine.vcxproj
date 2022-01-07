@@ -167,7 +167,9 @@
     <ClCompile Include="..\..\..\..\..\Documents\Visual Studio 2019\Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="movement.cpp" />
     <ClCompile Include="test_ui.cpp" />
+    <ClCompile Include="vmv_buffer.cpp" />
     <ClCompile Include="vmv_camera.cpp" />
+    <ClCompile Include="vmv_descriptors.cpp" />
     <ClCompile Include="vmv_device.cpp" />
     <ClCompile Include="vmv_game_object.cpp" />
     <ClCompile Include="vmv_model.cpp" />
@@ -182,8 +184,11 @@
   <ItemGroup>
     <ClInclude Include="movement.hpp" />
     <ClInclude Include="test_ui.hpp" />
+    <ClInclude Include="vmv_buffer.hpp" />
     <ClInclude Include="vmv_camera.hpp" />
+    <ClInclude Include="vmv_descriptors.hpp" />
     <ClInclude Include="vmv_device.hpp" />
+    <ClInclude Include="vmv_frame_info.hpp" />
     <ClInclude Include="vmv_game_object.hpp" />
     <ClInclude Include="vmv_model.hpp" />
     <ClInclude Include="vmv_pipeline.hpp" />
@@ -193,6 +198,10 @@
     <ClInclude Include="vmv_utils.hpp" />
     <ClInclude Include="vmv_window.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\simple_shader.frag" />
+    <None Include="shaders\simple_shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
