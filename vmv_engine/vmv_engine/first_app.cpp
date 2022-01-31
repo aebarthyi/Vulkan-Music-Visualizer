@@ -22,7 +22,10 @@ namespace vmv {
 
     struct GlobalUbo {
         glm::mat4 projectionView{ 1.f };
-        glm::vec3 lightDirection = glm::normalize(glm::vec3{ 1.f, -3.f, -1.f });
+        glm::vec4 ambientLightColors{ 1.f,1.f,1.f,0.2f };
+        glm::vec3 lightPosition{ -1.f };
+        alignas(16) glm::vec4 lightColo{ 1.f };
+
     };
 
     FirstApp::FirstApp() { 
@@ -78,7 +81,8 @@ namespace vmv {
 
         glfwSetInputMode(vmv_Window.getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-        auto viewerObject = vmvGameObject::createGameObject();
+        auto viewerObject = vmvGameObject::createGameObject(); 
+        viewerObject.transform.translation.z = -2.5f;
         MovementController cameraController{};
 
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -159,11 +163,18 @@ namespace vmv {
 
     void FirstApp::loadGameObjects() {
         std::shared_ptr<vmvModel> vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/smooth_vase.obj");
-        auto gameObj = vmvGameObject::createGameObject();
-        gameObj.model = vmv_Model;
-        gameObj.transform.translation = { .0f, .5f, 3.5f };
-        gameObj.transform.scale = glm::vec3(3.f, 1.5f, 3.f);
-        gameObjects.push_back(std::move(gameObj));
+        auto vase = vmvGameObject::createGameObject();
+        vase.model = vmv_Model;
+        vase.transform.translation = { .5f, .5f, .0f };
+        vase.transform.scale = glm::vec3(3.f, 1.5f, 3.f);
+        gameObjects.push_back(std::move(vase));
+
+        vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/quad.obj");
+        auto floor = vmvGameObject::createGameObject();
+        floor.model = vmv_Model;
+        floor.transform.translation = { .0f, .5f, .0f };
+        floor.transform.scale = glm::vec3(3.f, 1.f, 3.f);
+        gameObjects.push_back(std::move(floor));
     }
 
 }  // namespace vmv
