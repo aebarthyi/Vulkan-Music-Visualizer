@@ -12,16 +12,16 @@
 #include <iostream>
 
 namespace vmv {
-	class SimpleRenderSystem {
+	class PointLightSystem {
 	public:
 
-		SimpleRenderSystem(vmvDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
-		~SimpleRenderSystem();
+		PointLightSystem(vmvDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+		~PointLightSystem();
 
-		SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-		SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+		PointLightSystem(const PointLightSystem&) = delete;
+		PointLightSystem& operator=(const PointLightSystem&) = delete;
 
-		void renderGameObjects(FrameInfo &frameInfo);
+		void render(FrameInfo &frameInfo);
 
 	private:
 		void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

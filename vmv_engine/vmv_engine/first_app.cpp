@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 #include "simple_render_system.hpp"
+#include "point_light_system.hpp"
 #include "movement.hpp"
 #include "vmv_camera.hpp"
 #include "test_ui.hpp"
@@ -21,11 +22,11 @@
 namespace vmv {
 
     struct GlobalUbo {
-        glm::mat4 projectionView{ 1.f };
+        glm::mat4 projection{ 1.f };
+        glm::mat4 view{ 1.f };
         glm::vec4 ambientLightColors{ 1.f,1.f,1.f,0.2f };
         glm::vec3 lightPosition{ -1.f };
         alignas(16) glm::vec4 lightColo{ 1.f };
-
     };
 
     FirstApp::FirstApp() { 
@@ -52,7 +53,7 @@ namespace vmv {
         }
 
         auto globalSetLayout = vmvDescriptorSetLayout::Builder(vmv_Device)
-            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
             .build();
 
         std::vector<VkDescriptorSet> globalDescriptorSets(vmvSwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -71,6 +72,7 @@ namespace vmv {
         };
 
         SimpleRenderSystem simpleRenderSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout()};
+        PointLightSystem pointLightSystem{ vmv_Device, vmv_Renderer.getSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout() };
 
         vmvCamera camera{};
 
@@ -96,8 +98,8 @@ namespace vmv {
 
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
-            gameObjects[0].transform.scale = scale;
-            gameObjects[0].transform.rotation.x = glm::radians(rotation);
+            gameObjects.at(0).transform.scale = scale;
+            gameObjects.at(0).transform.rotation.x = glm::radians(rotation);
 
             float aspect = vmv_Renderer.getAspectRatio();
             //camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
@@ -110,15 +112,18 @@ namespace vmv {
                     frameTime,
                     commandBuffer,
                     camera,
-                    globalDescriptorSets[frameIndex]
+                    globalDescriptorSets[frameIndex],
+                    gameObjects
                 };
                 GlobalUbo ubo{};
-                ubo.projectionView = camera.getProjection() * camera.getView();
+                ubo.projection = camera.getProjection();
+                ubo.view = camera.getView();
                 uboBuffers[frameIndex]->writeToBuffer(&ubo);
                 uboBuffers[frameIndex]->flush();
                 testUI.newFrame();
                 vmv_Renderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+                simpleRenderSystem.renderGameObjects(frameInfo);
+                pointLightSystem.render(frameInfo);
 
                 {
                     ImGui::Begin("TEST_UI");
@@ -167,14 +172,14 @@ namespace vmv {
         vase.model = vmv_Model;
         vase.transform.translation = { .5f, .5f, .0f };
         vase.transform.scale = glm::vec3(3.f, 1.5f, 3.f);
-        gameObjects.push_back(std::move(vase));
+        gameObjects.emplace(vase.getId(), std::move(vase));
 
         vmv_Model = vmvModel::createModelFromFile(vmv_Device, "models/quad.obj");
         auto floor = vmvGameObject::createGameObject();
         floor.model = vmv_Model;
         floor.transform.translation = { .0f, .5f, .0f };
         floor.transform.scale = glm::vec3(3.f, 1.f, 3.f);
-        gameObjects.push_back(std::move(floor));
+        gameObjects.emplace(floor.getId(), std::move(floor));
     }
 
 }  // namespace vmv

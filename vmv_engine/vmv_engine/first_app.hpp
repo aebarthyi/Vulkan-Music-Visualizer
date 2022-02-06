@@ -31,6 +31,6 @@ namespace vmv {
 		vmvDevice vmv_Device{ vmv_Window };
 		vmvRenderer vmv_Renderer{ vmv_Window, vmv_Device };
 		std::unique_ptr<vmvDescriptorPool> globalPool{};
-		std::vector<vmvGameObject> gameObjects;
+		vmvGameObject::Map gameObjects;
 	};
 }

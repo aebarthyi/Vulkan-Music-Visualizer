@@ -1,6 +1,7 @@
 #pragma once
 
 #include "vmv_camera.hpp"
+#include "vmv_game_object.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -11,5 +12,6 @@ namespace vmv {
 		VkCommandBuffer commandBuffer;
 		vmvCamera& camera;
 		VkDescriptorSet globalDescriptorSet;
+		vmvGameObject::Map& gameObjects;
 	};
 }

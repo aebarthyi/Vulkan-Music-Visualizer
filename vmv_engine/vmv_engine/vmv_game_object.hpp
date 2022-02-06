@@ -2,6 +2,7 @@
 
 #include "vmv_model.hpp"
 #include <memory>
+#include <unordered_map>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace vmv {
@@ -23,6 +24,7 @@ namespace vmv {
 	class vmvGameObject {
 	public:
 		using id_t = unsigned int;
+		using Map = std::unordered_map<id_t, vmvGameObject>;
 
 		static vmvGameObject createGameObject() {
 			static id_t currentId = 0;

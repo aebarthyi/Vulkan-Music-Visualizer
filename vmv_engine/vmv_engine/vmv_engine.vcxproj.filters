@@ -39,9 +39,6 @@
     <ClCompile Include="vmv_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="simple_render_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmv_camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,6 +78,12 @@
     <ClCompile Include="vmv_descriptors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="point_light_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="simple_render_system.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="first_app.hpp">
@@ -107,9 +110,6 @@
     <ClInclude Include="vmv_renderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="simple_render_system.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmv_camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -131,12 +131,24 @@
     <ClInclude Include="vmv_descriptors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="point_light_system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="simple_render_system.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\simple_shader.vert">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\simple_shader.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\point_light.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\point_light.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
