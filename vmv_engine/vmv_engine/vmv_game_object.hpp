@@ -7,6 +7,10 @@
 
 namespace vmv {
 
+	struct PointLightComponent {
+		float lightIntensity = 1.0f;
+	};
+
 	struct TransformComponent {
 		glm::vec3 translation{};
 		glm::vec3 scale{1.f, 1.f, 1.f};
@@ -31,6 +35,8 @@ namespace vmv {
 			return vmvGameObject{ currentId++ };
 		}
 
+		static vmvGameObject makePointLight(float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3(1.f));
+
 		vmvGameObject(const vmvGameObject&) = delete;
 		vmvGameObject& operator=(const vmvGameObject&) = delete;
 		vmvGameObject(vmvGameObject&&) = default;
@@ -44,6 +50,7 @@ namespace vmv {
 		glm::vec3 color{};
 		TransformComponent transform{};
 		RigidBody2D rigidBody2d;
+		std::unique_ptr<PointLightComponent> pointLight = nullptr;
 
 	private:
 		id_t id;
